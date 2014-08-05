@@ -1,0 +1,273 @@
+
+% Requires:
+% \usepackage{tikz}
+% \usepackage{amsmath,mathtools}
+
+% Document specific definitions at the bottom %
+
+%%%%% Textcolour
+\newcommand{\blue}[1]{\textcolor{blue}{#1}}
+\newcommand{\red}[1]{\textcolor{red}{#1}}
+
+%%%%% matrix notation %%%%%
+% \renewcommand{\vec}[1]{\mathbf{#1}}
+\renewcommand{\vec}[1]{\overrightarrow{#1}}
+\renewcommand{\vec}[1]{\vv{#1}}
+\newcommand{\mat}[1]{\mathbf{#1}}
+
+%%%%% standard notations %%%%%
+\newcommand*{\norm}[1]{\lVert#1\rVert}
+\newcommand*{\euclnorm}[1]{\lVert#1\rVert_2}
+\newcommand*{\restr}[2]{{#1|}_{#2}}
+\DeclarePairedDelimiter{\card}{|}{|}
+
+\DeclarePairedDelimiterX{\setDef}[2]{\{}{\}}{#1 \; \delimsize| \; #2}
+\newcommand*{\setDefR}[2]{\left\{#1 \; \middle| \; #2\right\}}
+\newcommand*{\pow}[1]{\mathcal{P}(#1)}
+\newcommand*{\arr}[2]{#1 \rightarrow #2}
+\newcommand*{\inj}[2]{#1 \hookrightarrow #2}
+\newcommand*{\func}[3]{#1 \colon \arr{#2}{#3}}
+\newcommand*{\parr}[2]{#1 \rightharpoonup #2}
+\newcommand*{\pfunc}[3]{#1 \colon \parr{#2}{#3}}
+\newcommand*{\Endo}[2]{\func{#1}{#2}{#2}}
+\newcommand*{\op}[1]{#1^{\mathrm{op}}}
+\newcommand*{\preComp}[1]{{#1}^{\ast}}
+\newcommand*{\postComp}[1]{{#1}_{\ast}}
+\newcommand*{\nat}[3]{#1 \colon #2 \Rightarrow #3}
+\newcommandx*{\Hom}[3][1]{\mathrm{Hom}_{#1}\left(#2,#3\right)}
+\newcommand*{\IntHom}[2]{\left[ #1, #2 \right]}
+\newcommand*{\prodArr}[1]{\langle #1 \rangle}
+\newcommand*{\coprodArr}[1]{\left[ #1 \right]}
+\DeclareMathOperator{\const}{const}
+\DeclareMathOperator{\id}{id}
+\DeclareMathOperator{\Id}{Id}
+\DeclareMathOperator{\colim}{colim}
+\DeclareMathOperator{\supp}{supp}
+\DeclareMathOperator{\dom}{dom}
+
+%% Orders
+\newcommandx*{\downset}[2][1=]{\downarrow^{#1} #2}
+
+
+%%%%% basic operations %%%%
+\newcommandx*{\quot}[2][2=\sim]{{#1}/\!{\scriptstyle #2}}
+\DeclareMathOperator{\im}{Im}
+\newcommand*{\preIm}[1]{#1^{\leftarrow}}
+%\DeclareMathOperator{\ker}{Ker}
+\newcommand*{\unaryminus}{{-}}
+
+%%%%% some basic sets %%%%%
+\newcommand*{\N}{\mathbb{N}}
+\newcommand*{\Z}{\mathbb{Z}}
+\newcommand*{\Q}{\mathbb{Q}}
+\newcommand*{\R}{\mathbb{R}}
+
+\newcommand*{\Str}[1]{{#1}^{\omega}}
+
+%%%%% some categories (in bold font) %%%%
+\newcommand*{\Cat}[1]{\mathbf{#1}}
+\newcommand*{\SetC}{\Cat{Set}}
+\newcommand*{\VecC}{\Cat{Vec}}
+\newcommand*{\CoalgC}[1]{\mathrm{CoAlg}(#1)}
+\newcommand*{\TopC}{\Cat{Top}}
+\newcommandx*{\slice}[2]{{#1}/\!{\scriptstyle #2}}
+
+
+%%%%%%% referencing definitions etc. %%%%%%
+% lemRef is a reference a the beginning of sentence (no abbreviation).
+% iLemRef on the other hand is to be used inside a sentence
+% (may abbreviate). This distinction is made for all referencing commands.
+\newcommand{\eqRef}[1]{\eqref{eq:#1}}
+\newcommand{\lemRef}[1]{Lemma~\ref{lem:#1}}
+\newcommand{\iLemRef}[1]{Lem.~\ref{lem:#1}}
+\newcommand{\thmRef}[1]{Theorem~\ref{thm:#1}}
+\newcommand{\iThmRef}[1]{Thm.~\ref{thm:#1}}
+\newcommand{\corRef}[1]{Corollary~\ref{cor:#1}}
+\newcommand{\iCorRef}[1]{Cor.~\ref{cor:#1}}
+\newcommand{\propRef}[1]{Proposition~\ref{prop:#1}}
+\newcommand{\iPropRef}[1]{Prop.~\ref{prop:#1}}
+\newcommand{\defRef}[1]{Definition~\ref{def:#1}}
+\newcommand{\iDefRef}[1]{Def.~\ref{def:#1}}
+\newcommand{\exRef}[1]{Example~\ref{ex:#1}}
+\newcommand{\iExRef}[1]{Ex.~\ref{ex:#1}}
+\newcommand{\secRef}[1]{Section~\ref{sec:#1}}
+\newcommand{\iSecRef}[1]{Sec.~\ref{sec:#1}}
+\newcommand{\appRef}[1]{Appendix~\ref{app:#1}}
+\newcommand{\figRef}[1]{Figure~\ref{fig:#1}}
+\newcommand{\iFigRef}[1]{Fig.~\ref{fig:#1}}
+\newcommand{\tabRef}[1]{Table~\ref{tab:#1}}
+\newcommand{\iTabRef}[1]{Tab.~\ref{tab:#1}}
+\newcommand{\enumRef}[1]{(\ref{enum:#1})}
+% refined referencing %
+\newcommand{\lemSubRef}[2]{\lemRef{#1}.\ref{#1:#2}}
+
+%%%%%%% roman numerals %%%%%
+% Taken from
+% http://tex.stackexchange.com/questions/23487/how-can-i-get-roman-numerals-in-text
+\newcommand{\RNum}[1]{\uppercase\expandafter{\romannumeral #1\relax}}
+\newcommand{\RNumM}[1]{\text{\RNum{#1}}}
+
+
+%%%%%%%%% draw a smiley %%%%%%%%
+\newcommand{\smiley}{\tikz[baseline=-0.75ex,black]{
+    \begin{scope}[arrows=-]
+      \draw circle (2mm);
+      \node[fill,circle,inner sep=0.5pt] (left eye) at (135:0.8mm) {};
+      \node[fill,circle,inner sep=0.5pt] (right eye) at (45:0.8mm) {};
+      \draw (-165:1.2mm) arc (-130:-50:1.8mm);
+    \end{scope}
+    }
+}
+
+%%%%%%%% for example numbers with circles around %%%%%%
+\newcommand*\circled[1]{\tikz[baseline=(char.base)]{
+    \node[shape=circle,draw,inner sep=1pt] (char) {#1};}}
+
+%%%%%%%% Arrows %%%%%%%%
+\usetikzlibrary{matrix,arrows,decorations.pathmorphing,positioning}
+
+\newdimen{\ArrowLength}
+
+\newcommand*{\arrObj}[3]{%
+%  \setlength{\ArrowLength}{\widthof{$#1$}}%
+%  \scriptstyle%
+%  \left(%
+  \begin{pmatrix}%
+    \begin{tikzcd}[
+%      row sep=\ArrowLength%
+      row sep=8pt%
+      , inner sep=1pt
+%      ,every matrix/.append style={left delimiter=(,right delimiter=)}%
+      ]%
+      \scriptstyle %
+      #2 \dar[][near start]{#1} \\ #3%
+      \textstyle%
+    \end{tikzcd}%
+  \end{pmatrix}%
+%  \right)%
+}
+
+\newcommandx{\doublexrightarrow}[2][1]{%
+\setlength{\ArrowLength}{\maxof{\widthof{$#1$}}{\widthof{$#2$}}}%
+\tikz[minimum height=0ex,baseline]
+  \path[->]
+   node (a) {}
+   node [right=\ArrowLength of a] (b) {}
+   (a.north)  edge node[above]{$#2$} (b.north)
+   (a.center)  edge node[below]{$#1$} (b.center);%
+}
+
+\newcommand{\doublerightarrow}{\doublexrightarrow{}}
+
+\newcommandx{\xbackfortharrow}[2][1]{%
+\setlength{\ArrowLength}{\maxof{\widthof{$#1$}}{\widthof{$#2$}} + 0.5ex}%
+\tikz[minimum height=0ex,baseline]
+  \path[->]
+   node (a) {}
+   node [right=\ArrowLength of a] (b) {}
+   (a.north)  edge node[above]{$#2$} (b.north)
+   (b.center)  edge node[below]{$#1$} (a.center);%
+}
+
+\newcommand{\backfortharrow}{\xbackfortharrow{}}
+
+\newcommandx{\xcircinarrow}[1]{%
+\setlength{\ArrowLength}{\maxof{\widthof{$#1$}}{\widthof{$\circ$}+2pt}}%
+\tikz[minimum height=0ex,baseline]
+  \path[->]
+   node [anchor=base,minimum height=10pt] (a) {}
+   node [right=\ArrowLength of a] (b) {}
+   (a.north) edge node[above]{$#1$} node[above=-1.42ex]{$\circ$} (b.north);%
+}
+
+\newcommand{\circinarrow}{\xcircinarrow{}}
+
+\newcommandx{\xtwoheadrightarrow}[3][1,3=10pt]{%
+\setlength{\ArrowLength}{\maxof{\maxof{\widthof{$#1$}}{\widthof{$#2$}}}{#3}}%
+\tikz[minimum height=0ex,baseline,commutative diagrams/every diagram]
+  \draw[commutative diagrams/.cd, every label]
+   node [anchor=base,inner sep=0pt] (a) {\phantom{a}}
+   node [right=\ArrowLength of a,inner sep=0pt] (b) {}
+   (a.center) [commutative diagrams/twoheadrightarrow,shorten >=2pt] --
+     node[above]{$#2$} node[below]{$#1$} (b.center);
+}
+
+%\newcommand{\rightarrowtwohead}{\xrightarrowtwohead{}}
+
+\newcommandx{\xtwoheadleftarrow}[3][1,3=10pt]{%
+\setlength{\ArrowLength}{\maxof{\maxof{\widthof{$#1$}}{\widthof{$#2$}}}{#3}}%
+\tikz[minimum height=0ex,baseline,commutative diagrams/every diagram]
+  \draw[commutative diagrams/.cd, every label]
+   node [anchor=base,inner sep=0pt] (a) {\phantom{a}}
+   node [right=\ArrowLength of a,inner sep=0pt] (b) {}
+   (a.center) [commutative diagrams/twoheadleftarrow,shorten >=2pt] --
+     node[above]{$#2$} node[below]{$#1$} (b.center);
+}
+
+% \newcommand{\twoheadleftarrow}{\xtwoheadleftarrow{}}
+
+\newcommandx{\xbarrightarrow}[1][1=10pt]{%
+\setlength{\ArrowLength}{#1}
+\tikz[minimum height=0ex,baseline,commutative diagrams/every diagram]
+  \draw[commutative diagrams/.cd, every label]
+   node [anchor=base,inner sep=0pt] (a) {\phantom{a}}
+   node [right=0.2\ArrowLength of a,inner sep=0pt] (m1) {}
+   node [right=1pt of m1,inner sep=0pt] (m2) {}
+   node [right=\ArrowLength of a,inner sep=0pt] (b) {}
+   (a.center) edge [-|]
+   (m1.center) edge [-|]
+   (m2.center) edge [commutative diagrams/rightarrow,shorten >=2pt]
+   (b.center);
+}
+
+\newcommandx{\xbartwoheadrightarrow}[1][1=10pt]{%
+\setlength{\ArrowLength}{#1}
+\tikz[minimum height=0ex,baseline,commutative diagrams/every diagram]
+  \draw[commutative diagrams/.cd, every label]
+   node [anchor=base,inner sep=0pt] (a) {\phantom{a}}
+   node [right=0.2\ArrowLength of a,inner sep=0pt] (m1) {}
+   node [right=1pt of m1,inner sep=0pt] (m2) {}
+   node [right=\ArrowLength of a,inner sep=0pt] (b) {}
+   (a.center) edge [-|]
+   (m1.center) edge [-|]
+   (m2.center) edge [commutative diagrams/twoheadrightarrow,shorten >=2pt]
+   (b.center);
+}
+
+\newcommandx{\xbartwoheadleftarrow}[1][1=10pt]{%
+\setlength{\ArrowLength}{#1}
+\tikz[minimum height=0ex,baseline,commutative diagrams/every diagram]
+  \draw[commutative diagrams/.cd, every label]
+   node [anchor=base,inner sep=0pt] (a) {\phantom{a}}
+   node [right=0.3\ArrowLength of a,inner sep=0pt] (m1) {}
+   node [right=1pt of m1,inner sep=0pt] (m2) {}
+   node [right=\ArrowLength of a,inner sep=0pt] (b) {}
+   (a.center) edge [-|]
+   (m1.center) edge [-|]
+   (m2.center) edge [commutative diagrams/twoheadleftarrow,shorten >=2pt]
+   (b.center);
+}
+
+
+%%%%%%%%%%% Alignment in tabular %%%%%%%%%
+
+% See: http://tex.stackexchange.com/questions/12703/how-to-create-fixed-width-table-columns-with-text-raggedright-centered-raggedlef
+\newcolumntype{L}[1]{>{\raggedright\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\newcolumntype{C}[1]{>{\centering\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\newcolumntype{R}[1]{>{\raggedleft\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Specific definitions and notations %%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newcommand*{\SVar}{\mathrm{SVar}}
+\newcommand*{\SEnv}{\mathrm{SEnv}}
+\newcommand*{\SCtx}{\mathrm{SCtx}}
+
+\newcommand*{\fpSem}[2]{\llbracket #1 \rrbracket_{#2}}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "InterpSizedTypes"
+%%% ispell-local-dictionary: "british"
+%%% End:
