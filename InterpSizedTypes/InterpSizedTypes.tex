@@ -226,6 +226,143 @@ monotonicity theorem does not play a role here.
 I would rather require a hierarchy of such fibrations, where the functor
 category $\IntHom{p}{p}$ lives one level up.
 
+\section{Excursion: Interpretation of Dependent Types}
+We give here a naive interpretation of a simple dependent type theory over an
+LCCC.
+There are some subtleties related to substitution, see
+\cite{Jacobs-CatLog, Hofmann-LCCC}.
+
+Assume we are given a signature of basic dependent types together with an
+interpretation over $\Cat{U}$.
+A type $F$ consists of the following data.
+\begin{itemize}
+\item a rule for introduction
+  \begin{equation*}
+    \AxiomC{$\Gamma \vdash A_1 : \ast, \dotsc, A_n : \ast$}
+    \AxiomC{$\Gamma \vdash x_1 : B_1, \dotsc, x_m : B_m$}
+    \BinaryInfC{$\Gamma \vdash F(A_1, \dotsc, A_n, x_1, \dotsc, x_m) : \ast$}
+    \DisplayProof
+  \end{equation*}
+\item an object $\overline{F}(\alpha_1, \dotsc, \alpha_n) : \Cat{U}$
+  for the interpretation $\alpha_i : \overline{A}_i \to \overline{\Gamma}$ of
+  $A_i$.
+\item a map
+  \begin{equation*}
+    \Phi_F^{\alpha_1, \dotsc, \alpha_n, \beta_1, \dotsc, \beta_m} :
+      \overline{F} \to \overline{\Gamma}
+  \end{equation*}
+  for each $\alpha_i : \overline{A}_i \to \overline{\Gamma}$
+  and $\beta_j : \overline{B_j} \to \overline{\Gamma}$.
+  Note that $\Phi_F^{\vec{\alpha},\vec{\beta}}$ is an object in
+  $\slice{\Cat{U}}{\,\overline{\Gamma}}$.
+\end{itemize}
+
+\begin{example}
+  The first example, the natural numbers as a base types, is rather trivial and
+  does not require any parameters.
+  The introduction rule is
+  \begin{equation*}
+    \AxiomC{}
+    \UnaryInfC{$\Gamma \vdash \NatT : \ast$}
+    \DisplayProof
+  \end{equation*}
+  and the interpretation (over $\SetC$) is, of course, given by
+  $\overline{\NatT} = \N$.
+  Finally, the context dependency is again trivial, since there is no such
+  dependency:
+  \begin{equation*}
+    \Phi_{\NatT} = \; !_{\overline{\Gamma}}^\ast \, ( !_{\N})
+      : \N \to \overline{\Gamma}
+  \end{equation*}
+  where $!_X : X \to 1$ is the unique arrow into the final object $1$ and
+  $!_{\overline{\Gamma}}^\ast :
+  \slice{\Cat{U}}{1} \to \slice{\Cat{U}}{\, \overline{\Gamma}}$
+  is the reindexing functor.
+\end{example}
+
+The second example is less trivial.
+\begin{example}
+  We define a basic dependent type $\VecT A \, n$ of vectors of type $A$ and
+  length $n : \NatT$.
+  The introduction rule is
+  \begin{equation*}
+    \AxiomC{$\Gamma \vdash A : \ast$}
+    \AxiomC{$\Gamma \vdash n : \NatT$}
+    \BinaryInfC{$\Gamma \vdash \VecT A \; n : \ast$}
+    \DisplayProof
+  \end{equation*}
+  as expected.
+  Since the type $A$ can have itself dependencies, the interpretation of $\VecT$
+  is a bit tricky.
+
+  Let us first take a look at the special case that $\vdash A : \ast$.
+  Then we can just put
+  \begin{equation*}
+    \overline{\VecT}(\alpha) = \coprod_{n \in \N} \overline{A}^n,
+  \end{equation*}
+  using that $\alpha : \overline{A} \to 1$, hence $\alpha$ having only one
+  fibre, namely $\overline{A}$.
+  Now, let $\pi = \termSem{\Gamma \vdash n : \NatT} : \overline{\Gamma} \to \N$
+  be the projection on the variable $n$, then the indexing
+  for $\VecT$ is given by
+  \begin{equation*}
+    \Phi_{\VecT}^{\alpha,\beta} = \pi^{\ast}(p)
+      : \overline{\VecT}(\alpha) \to \overline{\Gamma}
+  \end{equation*}
+  where $p : \coprod_{n \in \N} \overline{A}^n \to \N$ is the evident projection
+  from the coproduct on its index set.
+  Note that we ignore $\beta : \N \to \overline{\Gamma}$ since the type $\NatT$
+  does not have any dependencies.
+
+  Next, we are going to tackle the case where $A$ can depend on variables in
+  the context $\Gamma$, hence we have
+  $\alpha : \overline{A} \to \overline{\Gamma}$.
+  The idea is now that each entry in a vector must come from the \emph{same}
+  fibre of $\alpha$, thus we put
+  \begin{equation*}
+    \overline{\VecT}(\alpha) =
+      \coprod_{n \in \N}
+      \coprod_{x \in \overline{\Gamma}}
+      \left( \alpha^{-1}(x) \right)^n.
+  \end{equation*}
+  The index projection
+  $\Phi_{\VecT}^{\alpha,\beta} : \VecT (\alpha) \to \overline{\Gamma}$ is
+  given by
+  \begin{equation*}
+    \prodArr{\pi,id_{\overline{\Gamma}}}^\ast
+    \left(p :  \overline{\VecT}(\alpha) \to \N \times \overline{\Gamma}\right)
+  \end{equation*}
+  where we used the reindexing functor
+  \begin{equation*}
+    \prodArr{\pi,\id_{\overline{\Gamma}}}^{\ast} :
+      \slice{\Cat{U}}{\N \times \overline{\Gamma}} \to
+      \slice{\Cat{U}}{\overline{\Gamma}}
+  \end{equation*}
+  coming from the pairing
+  $\prodArr{\pi,\id_{\overline{\Gamma}}} :
+  \overline{\Gamma} \to \N \times \overline{\Gamma}$
+  and $p$ being again the evident projection on the coproduct indices.
+
+  To fully understand this example, let us take a look at a concrete instance.
+  We interpret the judgement
+  $n : \NatT, m : \NatT \vdash \VecT \; (\VecT A \; n) \; m$ where $A$ is some
+  closed type.
+  Then the interpretation of $n : \NatT \vdash \VecT A \; n$ is
+  $\Phi_{\VecT} : \coprod_{n \in \N} \overline{A}^n \to \overline{\Gamma}$
+  and $\Phi_{\VecT}^{-1}(x) \cong \overline{A}$ for all
+  $x \in \overline{\Gamma}$.
+  Thus we have
+  \begin{equation*}
+    \overline{\VecT}(\Phi_{\VecT}) =
+      \coprod_{m \in \N}
+      \coprod_{x \in \overline{\Gamma}}
+      \left(\Phi_{\VecT}^{-1}(x) \right)^m
+      \cong
+      \coprod_{m \in \N} \coprod_{n \in \N} \overline{A}^n.
+  \end{equation*}
+\end{example}
+
+
 %\bibliographystyle{abbrv}
 %\bibliography{TypedBDE}
 
