@@ -55,6 +55,71 @@
 \let\thefootnote\relax
 \footnotetext{Base revision~\gitAbbrevHash, \gitReferences~from~\gitAuthorDate}
 
+\section{Dependent Fixed Points}
+Before getting into the interpretation of dependent sized types, let us first
+consider fixed points of dependent types.
+Here is an example of a fixed point type and its interpretation over $\SetC$.
+\begin{example}
+  Assume that for each closed type $\tau$, there is a type
+  $n:\NatT \vdash \VecT \tau \, n$, the vectors of size $n$ over $\tau$.
+  The we wish to interpret the following judgement
+  \begin{equation*}
+    n : \NatT \vdash \nu X. (\VecT \tau \, n) \times X.
+  \end{equation*}
+  The inner type gives rise to a functor $\Endo{G}{\slice{\SetC}{\N}}$ by
+  sending $p : \sigma \to \N$ to
+  $p \circ \pi_2 : \overline{\VecT \tau} \times_{\N} \sigma \to \N$ given by
+  the pullback
+  \begin{equation*}
+    \begin{tikzcd}
+      \overline{\VecT \tau} \times_{\N} \sigma \rar{\pi_1} \dar{\pi_2}
+        & \overline{\VecT \tau} \dar{} \\
+      \sigma \rar{p} & \N
+    \end{tikzcd}
+  \end{equation*}
+  and a morphism $f : \arrObj{}{\sigma}{\N} \to \arrObj{}{\sigma'}{\N}$ to
+  $\id \times_{\N} f$, using the pullback property, i.e.,
+  \begin{equation*}
+    \begin{tikzcd}
+      \overline{\VecT \tau} \times_{\N} \sigma
+        \arrow{rr}{\pi_1} \arrow{dd}{\pi_2} \arrow[dashed]{dr}{id \times_{\N} f}
+      &
+      & \overline{\VecT \tau}
+        \dar{\id} \\
+      & \overline{\VecT \tau} \times_{\N} \sigma' \rar{\pi_1} \dar{\pi_2}
+        & \overline{\VecT \tau} \dar{} \\
+      \sigma \rar{f} \arrow[bend right=15]{rr}[swap]{p}
+      & \sigma' \rar{p'}
+      & \N
+    \end{tikzcd}
+  \end{equation*}
+  Then the fixed point type is interpreted as the final coalgebra of $G$.
+
+  We can actually construct this fixed point by means of the final chain of $G$.
+  Since $\arrObj{\id}{\N}{\N}$ is the final object in $\slice{\SetC}{\N}$,
+  we construct the chain
+  \begin{equation*}
+    \begin{tikzcd}
+      \arrObjAlt{\id}{\N}{\N}
+      & \lar[swap]{!} \arrObjAlt{q}{\overline{\VecT \tau}}{\N}
+      & \lar[swap]{G(!)} \arrObjAlt{q_2}{A_2}{\N}
+      & \lar[swap]{G^2(!)} \arrObjAlt{q_3}{A_3}{\N}
+      & \lar[swap]{G^3(!)} \dotsm
+    \end{tikzcd}
+  \end{equation*}
+  where $A_k = \overline{\VecT \tau}^{\times_{\N}k}$ is the $k$-fold product of
+  $\overline{\VecT \tau}$ in $\slice{\SetC}{\N}$ with itself.
+  It is then rather easy to see, that the limit of this sequence is given by
+  \begin{equation*}
+    \lim G^n(!) \cong \coprod_{n \in \N} \Str{(\overline{\tau}^n)},
+  \end{equation*}
+  that is, a coproduct of streams, where each entry in the stream has the
+  same vector size.
+\end{example}
+
+Note, that the important property making this work, is that $G$ actually is
+a functor on the slice category, thus preserving the context.
+
 \section{Size Environments are Fibred over Size Contexts}
 \label{sec:size-env}
 
