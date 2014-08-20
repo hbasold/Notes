@@ -62,7 +62,7 @@ Here is an example of a fixed point type and its interpretation over $\SetC$.
 \begin{example}
   Assume that for each closed type $\tau$, there is a type
   $n:\NatT \vdash \VecT \tau \, n$, the vectors of size $n$ over $\tau$.
-  The we wish to interpret the following judgement
+  We wish to interpret the following judgement
   \begin{equation*}
     n : \NatT \vdash \nu X. (\VecT \tau \, n) \times X.
   \end{equation*}
@@ -72,22 +72,26 @@ Here is an example of a fixed point type and its interpretation over $\SetC$.
   the pullback
   \begin{equation*}
     \begin{tikzcd}
-      \overline{\VecT \tau} \times_{\N} \sigma \rar{\pi_1} \dar{\pi_2}
-        & \overline{\VecT \tau} \dar{} \\
+      \overline{\VecT \tau} \times_{\N} \sigma
+        \rar{\pi_1} \dar[swap]{\pi_2}
+      & \overline{\VecT \tau} \dar{} \\
       \sigma \rar{p} & \N
     \end{tikzcd}
   \end{equation*}
   and a morphism $f : \arrObj{}{\sigma}{\N} \to \arrObj{}{\sigma'}{\N}$ to
-  $\id \times_{\N} f$, using the pullback property, i.e.,
+  $\id \times_{\N} f$, using the pullback property:
   \begin{equation*}
     \begin{tikzcd}
       \overline{\VecT \tau} \times_{\N} \sigma
-        \arrow{rr}{\pi_1} \arrow{dd}{\pi_2} \arrow[dashed]{dr}{id \times_{\N} f}
+        \arrow{rr}{} \arrow{dd}{}
+        \arrow[dashed]{dr}[description]{id \times_{\N} f}
       &
       & \overline{\VecT \tau}
         \dar{\id} \\
-      & \overline{\VecT \tau} \times_{\N} \sigma' \rar{\pi_1} \dar{\pi_2}
-        & \overline{\VecT \tau} \dar{} \\
+      & \overline{\VecT \tau} \times_{\N} \sigma'
+        \rar{\pi_1} \dar[swap]{\pi_2}
+        \arrow[phantom]{dr}[very near start]{\lrcorner}
+      & \overline{\VecT \tau} \dar{} \\
       \sigma \rar{f} \arrow[bend right=15]{rr}[swap]{p}
       & \sigma' \rar{p'}
       & \N
@@ -107,8 +111,9 @@ Here is an example of a fixed point type and its interpretation over $\SetC$.
       & \lar[swap]{G^3(!)} \dotsm
     \end{tikzcd}
   \end{equation*}
-  where $A_k = \overline{\VecT \tau}^{\times_{\N}k}$ is the $k$-fold product of
-  $\overline{\VecT \tau}$ in $\slice{\SetC}{\N}$ with itself.
+  where $A_k = \overline{\VecT \tau}^{\times_{\N}k}$ is the $k$-fold fibred
+  product of $\overline{\VecT \tau}$ with itself, and noting that
+  $\overline{\VecT \tau} \times_{\N} \N \cong \overline{\VecT \tau}$.
   It is then rather easy to see, that the limit of this sequence is given by
   \begin{equation*}
     \lim G^n(!) \cong \coprod_{n \in \N} \Str{(\overline{\tau}^n)},
@@ -119,6 +124,101 @@ Here is an example of a fixed point type and its interpretation over $\SetC$.
 
 Note, that the important property making this work, is that $G$ actually is
 a functor on the slice category, thus preserving the context.
+So more generally, we can consider algebras and coalgebras for
+fibred endofunctors $\Endo{F}{\slice{\SetC}{A}}$ for any set $A$.
+In particular, we recover non-dependent (co)algebras, if we use $A = 1$, since
+then $\slice{\SetC}{1} \cong \SetC$.
+To ensure the existence of initial algebras/final coalgebras, we require as
+usual that the constructed initial/final chain converges, e.g., when
+$F$ preserves $\omega$-colimits/$\op{\omega}$-limits.
+
+\begin{example}
+  Let us construct $\VecT \sigma$ as dependent type in $\slice{\SetC}{\N}$.
+  The type has two constructors: an empty vector of length $0$ and prefixing of
+  a vector of lenght $n$ with an element of $A$, resulting into a vector of
+  lenght $n+1$.
+  Thus the signature is given by the following functor.
+  \begin{align*}
+    & \Endo{F}{\slice{\SetC}{\N}} \\
+    & F \arrObj{p}{X}{\N} = \arrObj{p'}{1 + A \times X}{\N} \\
+    & F (f : p \to q) = (\id_1 + \id_A \times f) : F(p) \to F(q)
+  \end{align*}
+  where $p' = \coprodArr{\lambda \_.0, \lambda (a, x). p(x) + 1}$.
+  Note that this is, as expected, the signature of lists, only including the
+  length of the list as extra information.
+  We construct the initial algebra by an $\omega$-chain, starting
+  at the initial object $0_{\N} = \arrObj{!}{0}{\N}$.
+  \begin{equation*}
+    \begin{tikzcd}
+      0_{\N} \rar{!}
+      & F 0_{\N} = \arrObjAlt{p_1}{1}{\N} \rar{F(!)}
+      & \arrObjAlt{p_2}{1 + A}{\N} \rar{F^2(!)}
+      & \arrObjAlt{p_2}{1 + A + A^2}{\N} \rar{F^3(!)}
+      & \dotsm
+    \end{tikzcd}
+  \end{equation*}
+  where $p_{n} = \coprodArr{\lambda \_.0, \lambda \_.k}_{k = 1, \dotsc, n}$
+  (copairing of the familiy of maps
+  $\{\lambda \_.0 : 1 \to \N\}
+  \cup \{\lambda \_.k : A^k \to \N \}_{k = 1, \dotsc, n}$).
+  The colimit of this sequence is then the desired set of vectors indexed by
+  their length:
+  \begin{equation*}
+    \overline{\VecT \tau} = \colim_{n \in \N} F^n(0_\N) \cong
+    \arrObj{p}{\textstyle \coprod_{n \in \N} A^n}{\textstyle \N}
+  \end{equation*}
+  with $p$ the canonical projection $p = \coprodArr{\lambda \_.k}_{k \in \N}$.
+
+  We end this example by noting that the presheaf approach, hence the definition
+  of $\VecT$ in Agda, would yield the following syntactic fixed point:
+  \begin{equation*}
+    \VecT \sigma = \mu. \Lambda F : \N \to \SetC.
+      \lambda\{0 \mapsto 1, (n + 1) \mapsto \sigma \times F(n)\}.
+  \end{equation*}
+  In other words, it is given as the initial algebra of the functor
+  \begin{align*}
+    & \Endo{G}{\IntHom{\N}{\SetC}} \\
+    & G(F)(n) =
+    \begin{cases}
+      1, & n = 0 \\
+      A \times F(n'), & n = n'+1
+    \end{cases}
+  \end{align*}
+  on the presheaf category (note that $\N$ is a discrete category).
+\end{example}
+
+\section{Replacing $\omega$ with arbitrary well-ordered set}
+\label{sec:fp-well-ordered-set}
+In the previous section, we have used $\omega = (\N, \leq)$, the natural numbers
+with their usual ordering, to construct the fixed point of a functor $F$.
+There are functors for which the initial/final chain does not converge at
+$\omega$, but only for greater ordinals.
+So in general, we just require to be given a well-ordered set $(S, \leq)$
+to construct fixed points.
+These are given for $\alpha \in S$ by
+\begin{align*}
+  & \mu^{\alpha} F = \colim_{\beta < \alpha} F(\mu^{\beta} F) \\
+  & \nu^{\alpha} F = \lim_{\beta < \alpha} F(\nu^{\beta} F).
+\end{align*}
+Here, an inequality $\beta \leq \gamma$ in $S$ gives an arrow
+$F(f) : F(\mu^{\beta} F) \to F(\mu^{\gamma} F)$ where $f$ comes from the
+colimit, since the cocone of $\mu^{\gamma}F$ restricts to a cocone
+over $F(\mu^{\delta}F)$ with $\delta < \beta$:
+\begin{equation*}
+  \begin{tikzcd}
+    \mu^{\beta} F \rar[dashed]{f} & \mu^{\gamma}F \\
+    F(\mu^{\delta}F) \uar{} \arrow{ur}{}
+  \end{tikzcd}
+\end{equation*}
+Dually, an inequality $\beta \leq \gamma$ gives an arrow
+$F(f) : F(\nu^{\gamma} F) \to F(\nu^{\beta} F)$ by restricting the cone of
+$\nu^{\gamma}$ to get $f : \nu^{\gamma} \to \nu^{\beta}F$.
+
+If we assume that there is an $\alpha \in S$, such that
+$F(\mu^{\alpha}F) \cong \mu^{\alpha}F$, then $\mu^{\alpha}F$ is the initial
+algebra of $F$, denoted by $\mu F$.
+In the same way we find the final coalgebra $\nu F$, if there is an $\alpha$,
+such that $F(\nu^{\alpha} F) \cong \nu^{\alpha}F$.
 
 \section{Size Environments are Fibred over Size Contexts}
 \label{sec:size-env}

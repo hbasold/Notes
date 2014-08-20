@@ -41,7 +41,7 @@
 \DeclareMathOperator{\const}{const}
 \DeclareMathOperator{\id}{id}
 \DeclareMathOperator{\Id}{Id}
-\DeclareMathOperator{\colim}{colim}
+\DeclareMathOperator*{\colim}{colim}
 \DeclareMathOperator{\supp}{supp}
 \DeclareMathOperator{\dom}{dom}
 
@@ -70,7 +70,9 @@
 \newcommand*{\VecC}{\Cat{Vec}}
 \newcommand*{\CoalgC}[1]{\mathrm{CoAlg}(#1)}
 \newcommand*{\TopC}{\Cat{Top}}
-\newcommandx*{\slice}[2]{{#1}/\!{\scriptstyle #2}}
+\newcommandx*{\slice}[2]{{#1}/{\scriptstyle #2}}
+\newcommand*{\ArrC}[1]{#1^{\rightarrow}}
+\newcommand*{\FibC}[1]{\Cat{Fib}\left(#1\right)}
 
 
 %%%%%%% referencing definitions etc. %%%%%%
@@ -133,19 +135,30 @@
 %  \scriptstyle%
 %  \left(%
   \begin{pmatrix}%
-    \begin{tikzcd}[
+    \begin{tikzcd}[%
 %      row sep=\ArrowLength%
       row sep=8pt%
       , inner sep=1pt
 %      ,every matrix/.append style={left delimiter=(,right delimiter=)}%
       ]%
-      \scriptstyle %
-      #2 \dar[][near start]{#1} \\ #3%
+      {\scriptstyle #2} %
+        \dar[][swap,near start]{\scriptstyle #1} \\%
+      {\scriptstyle #3} %
       \textstyle%
     \end{tikzcd}%
   \end{pmatrix}%
 %  \right)%
 }
+
+\newcommand{\arrObjAlt}[3]{%
+  \begin{pmatrix}%
+    \displaystyle%
+    \!%
+    \mathop{\scriptstyle #1\downarrow}^{\phantom{#1}#2}_{\phantom{#1}#3}%
+    \;\,%
+  \end{pmatrix}%
+}
+
 
 \newcommandx{\doublexrightarrow}[2][1]{%
 \setlength{\ArrowLength}{\maxof{\widthof{$#1$}}{\widthof{$#2$}}}%
@@ -268,8 +281,16 @@
 
 \DeclareMathOperator{\NatT}{Nat}
 \DeclareMathOperator{\VecT}{Vec}
-\newcommand*{\tySem}[1]{\llbracket #1 \rrbracket}
-\newcommand*{\termSem}[1]{\llbracket #1 \rrbracket}
+\DeclarePairedDelimiter{\tySem}{\llbracket}{\rrbracket}
+\DeclarePairedDelimiter{\ctxSem}{\llbracket}{\rrbracket}
+\DeclarePairedDelimiter{\clTySem}{\llbracket}{\rrbracket_c}
+\DeclarePairedDelimiter{\termSem}{\llbracket}{\rrbracket}
+\DeclarePairedDelimiter{\substSem}{\llbracket}{\rrbracket}
+
+\newcommand*{\Ty}[1]{\mathrm{Type}(#1)}
+
+%% \total{A}{X} is the total object of A(x) in X
+\newcommand*{\total}[2]{#2 \ltimes #1}
 
 %%% Local Variables:
 %%% mode: latex
