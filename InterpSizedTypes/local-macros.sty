@@ -281,6 +281,8 @@
 
 \DeclareMathOperator{\NatT}{Nat}
 \DeclareMathOperator{\VecT}{Vec}
+\DeclareMathOperator{\head}{hd}
+\DeclareMathOperator{\tail}{tl}
 \DeclarePairedDelimiter{\tySem}{\llbracket}{\rrbracket}
 \DeclarePairedDelimiter{\ctxSem}{\llbracket}{\rrbracket}
 \DeclarePairedDelimiter{\clTySem}{\llbracket}{\rrbracket_c}
@@ -291,6 +293,10 @@
 
 %% \total{A}{X} is the total object of A(x) in X
 \newcommand*{\total}[2]{#2 \ltimes #1}
+
+\lstdefinelanguage{Agda}[]{Haskell}{
+  morekeywords={Set,record,coinductive,field}
+}
 
 %%% Local Variables:
 %%% mode: latex

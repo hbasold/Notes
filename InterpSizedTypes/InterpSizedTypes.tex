@@ -132,7 +132,7 @@ To ensure the existence of initial algebras/final coalgebras, we require as
 usual that the constructed initial/final chain converges, e.g., when
 $F$ preserves $\omega$-colimits/$\op{\omega}$-limits.
 
-\begin{example}
+\begin{example}[Construction of $\VecT$]
   Let us construct $\VecT \sigma$ as dependent type in $\slice{\SetC}{\N}$.
   The type has two constructors: an empty vector of length $0$ and prefixing of
   a vector of lenght $n$ with an element of $A$, resulting into a vector of
@@ -186,6 +186,78 @@ $F$ preserves $\omega$-colimits/$\op{\omega}$-limits.
   \end{align*}
   on the presheaf category (note that $\N$ is a discrete category).
 \end{example}
+
+\begin{example}[Bisimilarity]
+  The final example is the construction of bisimilarity $\sim$ for streams.
+  To this end, consider the following Agda type, assuming that streams
+  $\Str{A}$ over the type $A$ are defined as the final coalgebra for the
+  observations $\head$ and $\tail$, or more concisely $(-)_0$ and $(-)'$, the
+  head and tail of a stream.
+\begin{lstlisting}[language=Agda,mathescape=true,columns=flexible]
+record _$\sim$_ (A : Set) (s t : $\Str{A}$) : Set where
+  coinductive
+  field
+    hd$\sim$ : $s_0 \equiv t_0$
+    tl$\sim$ : $s' \sim t'$
+\end{lstlisting}
+  It states that a bisimilarity proof for two streams $s,t$ consists of a proof
+  that the heads are equal ($\equiv$) and another proof for bisimilarity of
+  their tails.
+
+  Clearly, we wish to construct $\sim$ as final coalgebra.
+  We have again two approaches: the fibrational and the presheaf approach.
+  To construct $\sim$ as a presheaf, we follow the definition of the Agda type:
+  \begin{align*}
+    & \Endo{F}{\IntHom{(\Str{A})^2}{\SetC}} \\
+    & F(G)(s,t) = (s_0 \equiv t_0) \times G(s',t') \\
+    & F(\alpha)_{(s,t)} = \id_{(s_0 \equiv t_0)} \times \, \alpha_{(s',t')}
+  \end{align*}
+  where $\nat{\alpha}{G}{H}$ is a natural transformation from $G$ to $H$.
+  The final coalgebra $\nu F : \Str{A} \times \Str{A} \to \SetC$ describes then
+  the set of bisimilarity proofs for a pair of streams.
+
+  On the other hand, we get the fibrational perspective, if we consider the
+  map
+  \begin{equation*}
+    \prodArr{\head \times \head, \tail \times \tail} :
+    (\Str{A})^2 \to A^2 \times (\Str{A})^2
+  \end{equation*}
+  giving us the dependent sum
+  \begin{equation*}
+    \Sigma_{\prodArr{\head \times \head, \tail \times \tail}} :
+    \slice{\SetC}{A^2 \times (\Str{A})^2} \to \slice{\SetC}{(\Str{A})^2},
+  \end{equation*}
+  which we use to build the endofunctor
+  \begin{align*}
+    & F(p : X \to (\Str{A})^2) =
+      \Sigma_{\prodArr{\head \times \head, \tail \times \tail}}
+      (\pi_\equiv \times p) \\
+    & F(f : X \to Y) = 
+      \Sigma_{\prodArr{\head \times \head, \tail \times \tail}}(\id \times f)
+  \end{align*}
+  on $\slice{\SetC}{(\Str{A})^2}$, where $\pi_\equiv : \; \equiv \; \to A^2$ is
+  the indexing of equality, hence
+  $(\pi_{\equiv} \times p) : (\equiv \times \, X) \to A^2 \times (\Str{A})^2$.
+  Unravelling the corresponding definitions, this functor is given explicitly by
+  \begin{equation*}
+    F(p) =
+    q :
+    \left(\coprod_{s,t \in \Str{A}} (s_0 \equiv t_0) \times p^{-1}(s',t') \right)
+    \to
+    (\Str{A})^2
+  \end{equation*}
+  with $q$ being the canonical coproduct projection.
+  The final coalgebra of $F$ is then $\nu F : X \to \Str{A} \times \Str{A}$, an
+  object in $\slice{\SetC}{(\Str{A})^2}$.
+  A fibre $\nu F_{(s,t)}$ contains then the bisimilarity proofs of $s \sim t$,
+  which are streams of equality proofs, i.e.,
+  \begin{equation*}
+    \nu F = \coprod_{s,t \in \Str{A}} \prod_{n \in \N} (s_n \equiv t_n).
+  \end{equation*}
+\end{example}
+
+Analogously, the last example can also be extended to find construct
+bisimulations between arbitrary (stream) coalgebras.
 
 \section{Replacing $\omega$ with arbitrary well-ordered set}
 \label{sec:fp-well-ordered-set}
