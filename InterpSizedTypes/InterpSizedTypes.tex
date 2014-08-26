@@ -215,6 +215,17 @@ record _$\sim$_ (A : Set) (s t : $\Str{A}$) : Set where
   where $\nat{\alpha}{G}{H}$ is a natural transformation from $G$ to $H$.
   The final coalgebra $\nu F : \Str{A} \times \Str{A} \to \SetC$ describes then
   the set of bisimilarity proofs for a pair of streams.
+  The Its transition is given by a natural transformation
+  \begin{equation*}
+    \nat{\gamma}{\nu F}{F (\nu F)},
+  \end{equation*}
+  that is, for each $s,t \in \Str{A}$, we get an arrow
+  $\gamma_{(s,t)} : \nu F(s,t) \to (s_0 \equiv t_0) \times \nu F (s',t')$.
+  Let us write $s \sim t$ for $(\nu F)(s,t)$, then this reads as
+  \begin{equation*}
+    (s \sim t) \to (s_0 \equiv t_0) \times (s' \sim t'),
+  \end{equation*}
+  as expected.
 
   On the other hand, we get the fibrational perspective, if we consider the
   map
@@ -254,6 +265,20 @@ record _$\sim$_ (A : Set) (s t : $\Str{A}$) : Set where
   \begin{equation*}
     \nu F = \coprod_{s,t \in \Str{A}} \prod_{n \in \N} (s_n \equiv t_n).
   \end{equation*}
+  Again, $\nu F$ comes with a transition map
+  \begin{equation*}
+    \gamma : \arrObj{\nu F}{X}{(\Str{A})^2} \to
+    \arrObj{q}
+      {\textstyle
+        \coprod_{s,t \in \Str{A}} (s_0 \equiv t_0) \times (\nu F)^{-1}(s',t')}
+      {\textstyle (\Str{A})^2}.
+  \end{equation*}
+  If we use the notation $s \sim t = (\nu F)^{-1}(s,t)$, then we find
+  for a proof $x \in s \sim t$ that
+  \begin{equation*}
+    \gamma(x) \in (s_0 \equiv t_0) \times (s' \sim t'),
+  \end{equation*}
+  since $q(\gamma(x)) = (\nu F)(x)$.
 \end{example}
 
 Analogously, the last example can also be extended to find construct
